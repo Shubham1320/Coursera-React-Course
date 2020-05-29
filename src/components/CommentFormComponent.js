@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle,ListGroup ,ListGroupItem } from 'reactstrap';
-import {Link} from 'react-router-dom';
-import {Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import {Button, ModalHeader, Modal, ModalBody , Row, Col, Label} from 'reactstrap';
 import { Control, LocalForm, Errors} from 'react-redux-form';
-import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 
@@ -31,8 +27,8 @@ class CommentForm extends Component{
 	}
 
 	handleSubmit(values) {
-		this.toggleModal();
-		this.props.addComment(this.props.dishId, values.rating, values.yourname , values.comment);
+		console.log("Current State is : " + JSON.stringify(values));
+		alert("Current State is : " + JSON.stringify(values));
 	}	
 
 	render(){
@@ -107,102 +103,4 @@ class CommentForm extends Component{
 
 }
 
-
-function RenderDish({dish}){
-	return (
-		<Card>
-			<CardImg width="100%" src={dish.image} alt={dish.name}/>
-			<CardBody>
-				<CardTitle>{dish.name}</CardTitle>
-				<CardText> {dish.description} </CardText>
-			</CardBody>
-		</Card>
-	);	
-}
-
-function RenderComment({comments, addComment, dishId}){
-	const temp = [];
-	if(comments!=null){
-		console.log(comments.length);
-		for(var i=0;i<comments.length;i++){
-			temp.push(
-				<ListGroupItem key={comments[i].cid}>
-					<p>{comments[i].comment}</p><br />
-					<p>{comments[i].author}, {new Intl.DateTimeFormat('en-US',{year: 'numeric',month: 'short', day:'2-digit'}).format(new Date(Date.parse(comments[i].date)))}</p>
-				</ListGroupItem>
-			);
-		}
-		temp.push(
-			<ListGroupItem>
-				<CommentForm dishId = {dishId} addComment = {addComment}/>
-			</ListGroupItem>
-		)
-		return (temp);		
-	}
-	else{
-		return(<div></div>);
-	}	
-}
-
-const DishDetail = (props)=> {
-
-	if(props.isLoading) {
-		return(
-			<div className="container">
-				<div className="row">
-					<Loading />
-				</div>
-			</div>
-		);
-	}
-	else if(props.errMessage) {
-		return(
-			<div className="container">
-				<div className="row">
-					<h4>{props.errMessage}</h4>
-				</div>
-			</div>
-		);
-	}
-	else if(props.dishDetails != null){
-		const dish = props.dishDetails;
-		const comments = props.comments;
-
-		return(
-			<div className="container">
-				<div className="row">
-					<Breadcrumb>
-						<BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
-						<BreadcrumbItem active>{dish.name}</BreadcrumbItem>
-					</Breadcrumb>
-					<div className="col-12">
-						<h3>{dish.name}</h3>
-						<hr />
-					</div>
-				</div>
-				
-				<div className="row">	
-					<div className="col-12 col-md-5 m-1">
-						<RenderDish dish={dish}/>
-					</div>	
-
-					<div className="col-12 col-md-5 m-1">
-						<h4><strong>Comments</strong></h4>
-						<ListGroup>
-							<RenderComment comments = {comments}
-							addComment = {props.addComment}
-							dishId = {dish.id}/>
-						</ListGroup>
-					</div>
-				</div>
-			</div>	
-		);
-	}
-	else {
-		return(
-			<div></div>
-		);
-	}	
-}
-
-export default DishDetail;
+export default CommentForm;
